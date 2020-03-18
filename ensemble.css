@@ -1,0 +1,128 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #e6e6e6;
+    font-family: Optima;
+    color: #FFD700;
+    height: 100%;
+}
+.topBar {
+    padding: 10px;
+    background-color: #333;
+    display: grid;
+    grid-template-columns: 80px 200px auto;
+}
+.icon {
+    width: 60px;
+    grid-column: 1;
+}
+.barText {
+     margin-left: 10px;
+     margin-top: 20px;
+     font-size: 25px;
+     grid-column: 2;
+
+}
+.options {
+    margin-top: 20px;
+    font-size: 25px;
+    margin-right: 3%;
+    grid-column:3;
+}
+.options-link{
+    float: right;
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+.options-link:hover{
+    cursor: pointer;
+    color:#FFD700;
+}
+.main{
+    height: 400px;
+}
+.main-header {
+    color: black;
+    font-size: 50px;
+    margin-bottom: 2%;
+    margin-top: 10%;
+}
+.main-desc {
+    color: black;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    margin-bottom: 4%;
+}
+.main-button {
+    border: 1px solid #333;
+    border-radius: 500px;
+    padding: 20px;
+    width: 30%;
+    background-color: #FFD700;
+    color: #333;
+    font-size: 15px;
+}
+.main-button:hover{
+    background-color: #333;
+    color: white;
+    cursor:pointer;
+}
+.footer {
+    background-color: #333;
+    padding: 30px;
+    height: 100%;
+}
+.copyright {
+    color: #FFD700;
+}
+.form-container {
+  border: 10px solid #333;
+  width: 50%;
+  margin: 2%;
+  background-color: white;
+  height: 95%;
+}
+.input {
+  height: auto;
+}
+.inputBox {
+  margin: 20px;
+  width: 50%;
+  padding: 12px 20px;
+  border: 2px solid #333;
+  font-size: 15px;
+}
+.submit-button {
+  margin: 20px;
+}
+.form-divider {
+  padding:1px;
+  background-color: #333;
+  border: none;
+  width: 75%;
+}
+.input-link {
+  text-decoration: none;
+  color: #333;
+  margin-bottom: 10px;
+}
+.input-link:hover{
+  cursor: pointer;
+  color: #FFD700;
+}
+.link-container{
+  margin:10px;
+}
+/*input[type="date"]:before {
+  content: attr(placeholder) !important;
+  color: #aaa;
+  margin-right: 0.5em;
+}
+input[type="date"]:focus:before,
+input[type="date"]:valid:before {
+  content: "";
+}*/
