@@ -179,11 +179,27 @@ body {
   background-color: white;
   color: #333;
   width: 75%;
+  height: 300px;
+  overflow-y: scroll;
 }
 
 .music-table{
   font-size: 18px;
 }
+
+/* viewing a user profile */
+.other-profile {
+  padding: 5px;
+  color:#333;
+  display: grid;
+  grid-template-columns: 20% auto;
+}
+.other-profile-pic {
+  border: 4px solid #FFD700;
+  height: 200px;
+  border-radius: 50%;
+}
+
 
 /*input[type="date"]:before {
   content: attr(placeholder) !important;
