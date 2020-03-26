@@ -1,27 +1,27 @@
 <?php
-// add a new user to the user table + add the user's login
+// add a new user to the user table + add the user's username
 // into the unverified table 
 function addUser($db, $username, $pass, $email, $bdate) {
 
 	$hashedPass = md5($pass);
 
-	$queryUser = "INSERT INTO user VALUE ('$db','$username','$hashedPass','$email',$bdate);";
+	$queryUser = "INSERT INTO user (username, hashPass, email, bdate) VALUES ('$username','$pass','$email',$bdate);";
 	$resultUser = $db->query($queryUser);
 
 	$queryUnve = "INSERT INTO unverified VALUE ('$username');";
 	$resultUnve = $db->query($queryUnve);
 
 	if ($resultUser != FALSE AND $resultUnve != FALSE) {
-		print ("<P>Your account has been created with login $login, check your email address $email to verify your new account.</P>");
+		print ("<P>Your account has been created with username $username, check your email address $email to verify your new account.</P>");
 	}
 }
 
 function checkUser($db, $username, $pass) {
 	$hashedPass = md5($pass); 
 
-	$qStrUser = "SELECT * FROM user WHERE login='$username';";
+	$qStrUser = "SELECT * FROM user WHERE username='$username';";
 	$qStrUnve = "SELECT * FROM unverified WHERE username='$username';";
-	$qStrPass = "SELECT passHash FROM user WHERE login='$username';";
+	$qStrPass = "SELECT passHash FROM user WHERE username='$username';";
 
 	$qResUser = $db->query($qStrUser);
 	$qResPass = $db->query($qStrPass);
@@ -71,7 +71,7 @@ function registerUser($db, $input) {
 	return true; 
 }
 
-// remove the given login from unverified table 
+// remove the given username from unverified table 
 function verifyEmail($db, $username) {
 	//print("verifyEmail function called");
 	$query = "DELETE FROM unverified WHERE username='$username';";
@@ -82,6 +82,35 @@ function verifyEmail($db, $username) {
 
 	if ($check_result->rowCount() == 0) {
 		print ("<P>User $username is now verified. </P>");
+	}
+}
+
+// update user username, email and bday in profile
+function updateProfile($username, $email, $bdate) {
+
+	$query = "SELECT * FROM user WHERE username=$username";
+	$res = $db->query($query);
+
+	if ($res->rowCount() == 0) {
+		print("<P>Your username is incorrect / doesn't exist.</P>");
+		return -1;
+	}
+	else {
+		// when uid is 
+		$queryUpdate = "UPDATE user SET username = $username, email = $email, bdate = $bdate WHERE uid=2;"; //hard-coded uid for now
+		$resultUpdate = $db->query($queryUpdate);
+
+		$queryCheck = "SELECT username, email, bdate IN user WHERE uid=2";
+		$resultCheck = $db->query($queryCheck);
+
+		$result = $resultCheck->fetch();
+
+		if ($username == $result['username'] AND $email == $result['email'] AND $bdate == $result['bdate']) {
+			print("<P>Your information has been updated.</P>");
+		}
+		else {
+			print("<P>Error. Try again.</P>");
+		}
 	}
 }
 ?>
