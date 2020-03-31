@@ -63,6 +63,16 @@
                 ?>
                 </select>
                 <center>
+                  <?php
+                      $currID = $_GET['id'];
+                      $qStr = "SELECT name FROM Playlist WHERE pid = $currID";
+                      $qRes = $db->query($qStr);
+                      if($qRes != FALSE) {
+                        $row = $qRes->fetch();
+                        $name = $row['name'];
+                        print "<h1> $name </h1>";
+                      }
+                  ?>
                 <table class = "music-table" cellspacing ="5" cellpadding="10">
                   <?php
                     $currID = $_GET['id'];
