@@ -1,3 +1,7 @@
+<?php
+session_start();
+$_SESSION['uid'] = 1;
+?>
 <html>
     <head>
         <meta charset = "UTF-8">
@@ -45,8 +49,8 @@
               <select onchange="changeInfo()" id ="trackSelect">
               <option value ="none" disabled selected = "selected"> please select one </option>
               <?php
-
-                $qStr = "SELECT name, pid FROM Playlist WHERE owner = 1;";
+                $owner =  $_SESSION['uid'];
+                $qStr = "SELECT name, pid FROM Playlist WHERE owner = $owner;";
                 $qRes = $db->query($qStr);
 
                 if($qRes != FALSE) {
