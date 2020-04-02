@@ -52,6 +52,7 @@ function checkUser($db, $username, $pass) {
 function registerUser($db, $input) {
 	$username = $input['username'];
 	$pass  = $input['password'];
+	$repass = $input['re-password'];
 	$email = $input['email'];
 	$bdate = $input['bdate'];
 
@@ -59,8 +60,9 @@ function registerUser($db, $input) {
 	if (checkUser($db, $username, $pass) != -1) {
 		return false;
 	}
-	// if user doesnt exist -> create new user
-	else {
+	// user doesnt exist -> create new user
+	// if password match 
+	if ($pass == $repass) {
 		addUser($db, $username, $pass, $email, $bdate);
 		// compose a link
 		$subject = "Verify Email Address";
@@ -86,30 +88,26 @@ function verifyEmail($db, $username) {
 }
 
 // update user username, email and bday in profile
-function updateProfile($username, $email, $bdate) {
-
-	$query = "SELECT * FROM user WHERE username=$username";
+function updateProfile($db, $username, $email, $bdate) {
+	$query = "SELECT * FROM user WHERE uid=1;";
 	$res = $db->query($query);
-
+	
 	if ($res->rowCount() == 0) {
-		print("<P>Your username is incorrect / doesn't exist.</P>");
 		return -1;
 	}
 	else {
-		// when uid is 
-		$queryUpdate = "UPDATE user SET username = $username, email = $email, bdate = $bdate WHERE uid=2;"; //hard-coded uid for now
+		$queryUpdate = "UPDATE user SET username = '$username', email = '$email', bdate = '$bdate' WHERE uid=1;"; //hard-coded uid for now
 		$resultUpdate = $db->query($queryUpdate);
 
-		$queryCheck = "SELECT username, email, bdate IN user WHERE uid=2";
+		$queryCheck = "SELECT username, email, bdate FROM user WHERE uid=1;";
 		$resultCheck = $db->query($queryCheck);
-
 		$result = $resultCheck->fetch();
 
 		if ($username == $result['username'] AND $email == $result['email'] AND $bdate == $result['bdate']) {
-			print("<P>Your information has been updated.</P>");
+			return 1;
 		}
 		else {
-			print("<P>Error. Try again.</P>");
+			return -2;
 		}
 	}
 }
