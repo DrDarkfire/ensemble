@@ -22,6 +22,21 @@ $_SESSION['uid'] = 1;
             $queryUser = "INSERT INTO Playlist VALUES (null ,1, '$pname', $public);";
           	$resultUser = $db->query($queryUser);
           }
+          if(!empty($_POST['tname'])) {
+            /* Add the track and then update the table connecting tracks to playlists*/
+            $tname = $_POST['tname'];
+            $link = $_POST['link'];
+            $queryUser = "INSERT INTO Tracks VALUES (null ,'$tname', '$link');";
+            $resultUser = $db->query($queryUser);
+            $autoQuery = "SHOW TABLE STATUS LIKE 'Tracks'";
+            $result = $db->query($autoQuery);
+            $row = $result->fetch();
+            $next_increment = $row['Auto_increment'] - 1;
+            $pid = $_POST['pid'];
+            $queryUser = "INSERT INTO pid_tid VALUES($pid, $next_increment);";
+            $resultUser = $db->query($queryUser);
+
+          }
         ?>
         <!-- Top bar of the webpage, contains logo and drop down menu with links -->
         <div class = "topBar">
@@ -41,13 +56,48 @@ $_SESSION['uid'] = 1;
               </div>
            </div>
         </div>
+        <!-- modal box for add playlist -->
+        <div class = "modal" id ="addBox" onclick = "closeBox(event)">
+          <div class = "music-container" id = "addForm" style = "margin-left:auto; margin-right:auto">
+            <center>
+          <h1> Add playlist </h1>
+          <form name="" method = "POST" action="myMusic.php">
+            <input class = "inputBox" type = "text" name = "name" placeholder = "name">
+            <br />
+            <input type="radio" name="public" value="public">
+            <label for="male">Public</label><br>
+            <input type="radio"  name="public" value="private">
+            <label for="female">Private</label><br>
+            <input style = "width: 50%;" class ="submit-button main-button" type = "submit" value = "Add playlist ">
+          </form>
+        </center>
+        </div>
+        </div>
+        <!-- modal box for add track -->
+        <div class = "modal" id ="trackBox" onclick = "closeTrackBox(event)">
+          <div class = "music-container" id = "trackForm" style = "margin-left:auto; margin-right:auto">
+            <center>
+          <h1> Add playlist </h1>
+          <form name="" method = "POST" action="myMusic.php">
+            <input class = "inputBox" type = "text" name = "tname" placeholder = "Song name">
+            <br />
+            <input class = "inputBox" type = "text" name = "link" placeholder = "link">
+            <br />
+            <?php
+            $currID = $_GET['id'];
+            print "<input type = 'text' name = 'pid' value = '$currID' style = 'display:none'>";
+            ?>
+            <input style = "width: 50%;" class ="submit-button main-button" type = "submit" value = "Add playlist ">
+          </form>
+        </center>
+        </div>
+        </div>
         <!-- User what's new page contianing what their friends have been listening to -->
-        <div class = "music-grid">
+        <div class = "playlist-grid">
           <div class = "music-container">
             <center>
-                <h1> Your playlists </h1>
-              <select onchange="changeInfo()" id ="trackSelect">
-              <option value ="none" disabled selected = "selected"> please select one </option>
+                <h1 style = "display: inline;"> Playlists </h1>
+                <p style = "display: inline; font-size: 20px; cursor:pointer;" onclick = "showAdd()"> + </p>
               <?php
                 $owner =  $_SESSION['uid'];
                 $qStr = "SELECT name, pid FROM Playlist WHERE owner = $owner;";
@@ -60,58 +110,49 @@ $_SESSION['uid'] = 1;
                   while($row = $qRes->fetch()) {
                     $name = $row['name'];
                     $pid = $row['pid'];
-                    $str = "<option value ='$pid'>$name</option>\n";
+                    $link = "myMusic.php?&id=" . $pid;
+                    $str = "<a class = 'playlist-link' href ='$link'>$name</a></br>";
                     print $str;
                   }
                 }
                 ?>
-                </select>
-                <center>
-                  <?php
-                      $currID = $_GET['id'];
-                      $qStr = "SELECT name FROM Playlist WHERE pid = $currID";
-                      $qRes = $db->query($qStr);
-                      if($qRes != FALSE) {
-                        $row = $qRes->fetch();
-                        $name = $row['name'];
-                        print "<h1> $name </h1>";
-                      }
-                  ?>
-                <table class = "music-table" cellspacing ="5" cellpadding="10">
-                  <?php
-                    $currID = $_GET['id'];
-                    $qStr = "SELECT Name FROM Tracks NATURAL JOIN pid_tid WHERE pid = $currID";
-                    $qRes = $db->query($qStr);
-                    if($qRes != FALSE) {
-
-                      //display all rows from user
-
-                      while($row = $qRes->fetch()) {
-                        $name = $row['Name'];
-                        $str = "<TR><TD>$name</TD></TR>\n";
-                        print $str;
-                        }
-                    }
-                    ?>
-                </table>
               </center>
             </center>
           </div>
-          <div id = "addPlaylist" class = "music-container" >
+          <div class = "music-container">
             <center>
-                <h1> Add playlists </h1>
-              <form name="" method = "POST" action="myMusic.php">
-                <input class = "inputBox" type = "text" name = "name" placeholder = "name">
-                <br />
-                <input type="radio" name="public" value="public">
-                <label for="male">Public</label><br>
-                <input type="radio"  name="public" value="private">
-                <label for="female">Private</label><br>
-                <input style = "width: 80%;" class ="submit-button main-button" type = "submit" value = "Add playlist ">
-              </form>
-            </center>
-          </div>
+              <?php
+                  $currID = $_GET['id'];
+                  $qStr = "SELECT name FROM Playlist WHERE pid = $currID";
+                  $qRes = $db->query($qStr);
+                  if($qRes != FALSE) {
+                    $row = $qRes->fetch();
+                    $name = $row['name'];
+                    print " <h1 style = 'display: inline;'> $name</h1>
+                            <p style = 'display: inline; font-size: 20px; cursor:pointer;' onclick = 'showTrack()'> + </p></br>";
+                  }
+                  else {
+                    print "<h1> Select a playlist </h1>";
+                  }
+              ?>
+            <table class = "music-table" cellspacing ="5" cellpadding="10">
+              <?php
+                $currID = $_GET['id'];
+                $qStr = "SELECT Name FROM Tracks NATURAL JOIN pid_tid WHERE pid = $currID";
+                $qRes = $db->query($qStr);
+                if($qRes != FALSE) {
 
+                  //display all rows from user
+
+                  while($row = $qRes->fetch()) {
+                    $name = $row['Name'];
+                    $str = "<TR><TD>$name</TD></TR>\n";
+                    print $str;
+                    }
+                }
+                ?>
+            </table>
+          </div>
         </div>
         <!-- footer -->
         <div class = "footer">
@@ -121,11 +162,21 @@ $_SESSION['uid'] = 1;
         </div>
     </body>
     <script>
-        function changeInfo() {
-          var currID = document.getElementById("trackSelect");
-          var value = currID.options[currID.selectedIndex].value;
-          var str = "&id=" + value;
-          window.location.search += str;
+        function showAdd() {
+          document.getElementById("addBox").style.display = "block";
+        }
+        function closeBox(e) {
+          if(e.target.id == "addBox") {
+            document.getElementById("addBox").style.display = "none";
+          }
+        }
+        function showTrack() {
+          document.getElementById("trackBox").style.display = "block";
+        }
+        function closeTrackBox(e) {
+          if(e.target.id == "trackBox") {
+            document.getElementById("trackBox").style.display = "none";
+          }
         }
     </script>
 </html>
