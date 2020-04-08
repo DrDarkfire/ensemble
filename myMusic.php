@@ -37,6 +37,12 @@ $_SESSION['uid'] = 1;
             $resultUser = $db->query($queryUser);
 
           }
+          if(!empty($_POST['tid'])) {
+            $tid = $_POST['tid'];
+            $pid = $_POST['pid'];
+            $queryUser = "DELETE FROM pid_tid WHERE pid = $pid AND tid = $tid;";
+            $resultUser = $db->query($queryUser);
+          }
         ?>
         <!-- Top bar of the webpage, contains logo and drop down menu with links -->
         <div class = "topBar">
@@ -77,7 +83,7 @@ $_SESSION['uid'] = 1;
         <div class = "modal" id ="trackBox" onclick = "closeTrackBox(event)">
           <div class = "music-container" id = "trackForm" style = "margin-left:auto; margin-right:auto">
             <center>
-          <h1> Add playlist </h1>
+          <h1> Add a song </h1>
           <form name="" method = "POST" action="myMusic.php">
             <input class = "inputBox" type = "text" name = "tname" placeholder = "Song name">
             <br />
@@ -87,12 +93,28 @@ $_SESSION['uid'] = 1;
             $currID = $_GET['id'];
             print "<input type = 'text' name = 'pid' value = '$currID' style = 'display:none'>";
             ?>
-            <input style = "width: 50%;" class ="submit-button main-button" type = "submit" value = "Add playlist ">
+            <input style = "width: 50%;" class ="submit-button main-button" type = "submit" value = "Add Song">
           </form>
         </center>
         </div>
         </div>
-        <!-- User what's new page contianing what their friends have been listening to -->
+        <!-- modal box for delete track -->
+        <div class = "modal" id ="trackBoxD" onclick = "closeTrackBoxD(event)">
+          <div class = "music-container" id = "trackFormD" style = "margin-left:auto; margin-right:auto; height: 200px;">
+            <center>
+          <h1> Delete this song? </h1>
+          <form name="" method = "POST" action="myMusic.php">
+            <input id = "deleteID" class = "inputBox" type = "text" name = "tid" value ="" style = "display:none">
+            <?php
+            $currID = $_GET['id'];
+            print "<input type = 'text' name = 'pid' value = '$currID' style = 'display:none'>";
+            ?>
+            <input style = "width: 50%;" class ="submit-button main-button" type = "submit" value = "Delete Song">
+          </form>
+        </center>
+        </div>
+        </div>
+        <!-- Users lists of playlists  -->
         <div class = "playlist-grid">
           <div class = "music-container">
             <center>
@@ -138,7 +160,7 @@ $_SESSION['uid'] = 1;
             <table class = "music-table" cellspacing ="5" cellpadding="10">
               <?php
                 $currID = $_GET['id'];
-                $qStr = "SELECT Name FROM Tracks NATURAL JOIN pid_tid WHERE pid = $currID";
+                $qStr = "SELECT Name, tid FROM Tracks NATURAL JOIN pid_tid WHERE pid = $currID";
                 $qRes = $db->query($qStr);
                 if($qRes != FALSE) {
 
@@ -146,7 +168,8 @@ $_SESSION['uid'] = 1;
 
                   while($row = $qRes->fetch()) {
                     $name = $row['Name'];
-                    $str = "<TR><TD>$name</TD></TR>\n";
+                    $tid = $row['tid'];
+                    $str = "<TR><TD>$name</TD><TD><i  style = 'cursor:pointer' class='fa fa-trash-o' onclick='deleteSong($tid)'></i></TD></TR>\n";
                     print $str;
                     }
                 }
@@ -176,6 +199,15 @@ $_SESSION['uid'] = 1;
         function closeTrackBox(e) {
           if(e.target.id == "trackBox") {
             document.getElementById("trackBox").style.display = "none";
+          }
+        }
+        function deleteSong(tid) {
+          document.getElementById("deleteID").value = tid;
+          document.getElementById("trackBoxD").style.display = "block";
+        }
+        function closeTrackBoxD(e) {
+          if(e.target.id == "trackBoxD") {
+            document.getElementById("trackBoxD").style.display = "none";
           }
         }
     </script>
