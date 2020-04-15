@@ -263,7 +263,7 @@ $_SESSION['uid'] = 1;
           }
         }
         /*keep track of track playing */
-        var currentTrack = 2;
+        var currentTrack = 1;
         /*open the video player on play  */
         function openVideoPlayer() {
           var songId = "songL" + currentTrack;
