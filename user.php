@@ -80,20 +80,6 @@
           </div>
           <div class = "music-container">
             <center>
-            <h2> Popular playlists on Ensemble</h2>
-            <table class = "music-table" cellspacing ="5" cellpadding="10">
-              <TR><TD>Name</TD><TD>Creator</TD></TR>
-              <TR><TD>Name</TD><TD>Creator</TD></TR>
-              <TR><TD>Name</TD><TD>Creator</TD></TR>
-              <TR><TD>Name</TD><TD>Creator</TD></TR>
-              <TR><TD>Name</TD><TD>Creator</TD></TR>
-              <TR><TD>Name</TD><TD>Creator</TD></TR>
-              <TR><TD>Name</TD><TD>Creator</TD></TR>
-            </table>
-            </center>
-          </div>
-          <div class = "music-container">
-            <center>
             <h2> Music you might like </h2>
             <table class = "music-table" cellspacing ="5" cellpadding="10">
               <TR><TD>Fake Song</TD></TR>

@@ -50,6 +50,11 @@ $_SESSION['uid'] = 1;
             $resultOne = $db->query($queryOne);
             $resultTwo = $db->query($queryTwo);
           }
+          else if(!empty($_GET['id'])) {
+            $pid = $_GET['id'];
+            $query = "UPDATE Playlist SET plays = plays + 1 WHERE  pid = $pid;";
+            $result = $db->query($query);
+          }
         ?>
         <!-- Top bar of the webpage, contains logo and drop down menu with links -->
         <div class = "topBar">
@@ -98,7 +103,7 @@ $_SESSION['uid'] = 1;
             <br />
             <?php
             $currID = $_GET['id'];
-            print "<input type = 'text' name = 'pid' value = '$currID' style = 'display:none'>";
+            print "<input type = 'text' id ='currpid' name = 'pid' value = '$currID' style = 'display:none'>";
             ?>
             <input style = "width: 50%;" class ="submit-button main-button" type = "submit" value = "Add Song">
           </form>
@@ -175,8 +180,11 @@ $_SESSION['uid'] = 1;
                     $row = $qRes->fetch();
                     $name = $row['name'];
                     print " <h1 style = 'display: inline;'> $name</h1>
+
                             <i class = 'fa fa-play' style = 'display:inline; margin:20px; cursor:pointer' onclick = 'openVideoPlayer()'></i>
-                            <p style = 'display: inline; font-size: 20px; cursor:pointer;' onclick = 'showTrack()'> + </p></br>";
+                            <p style = 'display: inline; font-size: 20px; cursor:pointer;' onclick = 'showTrack()'> + </p></br>
+                            <i class = 'fa fa-backward trackController' id ='prevTrack' style = 'display: none' onclick = 'changeTrack(0)'> </i>
+                            <i class = 'fa fa-forward trackController' id = 'nextTrack' style = 'display: none' onclick = 'changeTrack(1)'> </i>";
                   }
                   else {
                     print "<h1> Select a playlist </h1>";
@@ -197,7 +205,8 @@ $_SESSION['uid'] = 1;
                     $link = $row['Link'];
                     $songID = "song" . $currSong;
                     $songLinkID = "songL" . $currSong;
-                    $str = "<TR><TD id ='$songID'>$name</TD><TD style ='display:none' id ='$songLinkID'>$link</TD><TD><i  style = 'cursor:pointer' class='fa fa-trash-o' onclick='deleteSong($tid)'></i></TD></TR>\n";
+                    $songTidID = "songID" . $currSong;
+                    $str = "<TR><TD id ='$songID'>$name</TD><TD style ='display:none' id ='$songLinkID'>$link</TD><TD style ='display:none' id ='$songTidID'>$tid</TD><TD><i  style = 'cursor:pointer' class='fa fa-trash-o' onclick='deleteSong($tid)'></i></TD></TR>\n";
                     print $str;
                     $currSong++;
                     }
@@ -205,13 +214,11 @@ $_SESSION['uid'] = 1;
                 ?>
             </table>
           </div>
-        </div>
-        <div id = "iframeDiv" style = "display:none; font-size: 30px">
-          <center>
-          <i class = "fa fa-backward trackController" id ="prevTrack" style = "display: none" onclick = "changeTrack(0)"> </i>
-          <iframe id = "framePlayer" allow="autoplay" src = ""></iframe>
-          <i class = "fa fa-forward trackController" id = "nextTrack" style = "display: none" onclick = "changeTrack(1)"> </i>
-          </center>
+          <div id = "iframeDiv" style = "display:none; font-size: 30px">
+            <center>
+            <iframe id = "framePlayer" allow="autoplay" src = ""></iframe>
+            </center>
+          </div>
         </div>
         <!-- footer -->
         <div class = "footer">
@@ -310,5 +317,6 @@ $_SESSION['uid'] = 1;
           document.getElementById("framePlayer").src =   document.getElementById("framePlayer").src;
           updateVideoPlayer();
         }
+
     </script>
 </html>

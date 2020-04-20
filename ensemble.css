@@ -236,7 +236,7 @@ body {
 }
 
 .playlist-grid {
-  grid-template-columns: 33% auto;
+  grid-template-columns: 33% 33% 33%;
   grid-template rows: auto auto auto;
   display: grid;
   height: auto;
@@ -261,6 +261,18 @@ body {
   color: #333;
   cursor: pointer;
   margin: 20px;
+}
+
+#iframeDiv{
+  margin: 50px;
+  padding: 20px;
+  color: #333;
+  width: 75%;
+  height: 300px;
+}
+
+#framePlayer {
+  height: 80%;
 }
 /*input[type="date"]:before {
   content: attr(placeholder) !important;
