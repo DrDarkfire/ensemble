@@ -45,10 +45,22 @@ $_SESSION['uid'] = 1;
           }
           else if(!empty($_POST['dpid'])) {
             $pid = $_POST['dpid'];
-            $queryOne = "DELETE FROM pid_tid WHERE pid = $pid;";
-            $queryTwo = "DELETE FROM Playlist WHERE pid = $pid;";
-            $resultOne = $db->query($queryOne);
-            $resultTwo = $db->query($queryTwo);
+            $user = $_SESSION['uid'];
+            $checkQuery = "SELECT owner FROM Playlist WHERE pid = $pid";
+            $resultCheck = $db->query($checkQuery);
+            $row = $resultCheck->fetch();
+            $owner = $row['owner'];
+            if($user == $owner) {
+              $queryOne = "DELETE FROM pid_tid WHERE pid = $pid;";
+              $queryTwo = "DELETE FROM Playlist WHERE pid = $pid;";
+              $resultOne = $db->query($queryOne);
+              $resultTwo = $db->query($queryTwo);
+            }
+            else {
+              $queryOne = "DELETE FROM followplist WHERE pid = $pid AND uid = $user;";
+              $resultOne = $db->query($queryOne);
+            }
+
           }
           else if(!empty($_GET['id'])) {
             $pid = $_GET['id'];
@@ -66,10 +78,10 @@ $_SESSION['uid'] = 1;
               <div class="menu-icon dropdown">
                 <i class="fa fa-bars" style = "color:#FFD700"></i>
                 <div class="dropdown-content">
-                  <a href="user.html" >What's new</a>
+                  <a href="user.php" >What's new</a>
                   <a href="#" >My Ensemble</a>
                   <a href="myMusic.php" >My Music</a>
-                  <a href="updateProfile.html" >Edit Profile</a>
+                  <a href="updateProfile.php" >Edit Profile</a>
                 </div>
               </div>
            </div>
@@ -132,10 +144,7 @@ $_SESSION['uid'] = 1;
             <center>
           <h1> Delete this playlist? </h1>
           <form name="" method = "POST" action="myMusic.php">
-            <?php
-            $currID = $_GET['id'];
-            print "<input type = 'text' name = 'dpid' value = '$currID' style = 'display:none'>";
-            ?>
+            <input type = 'text' name = 'dpid' id ="deleteList" value = '' style = 'display:none'>;
             <input style = "width: 50%;" class ="submit-button main-button" type = "submit" value = "Delete Playlist">
           </form>
         </center>
@@ -161,7 +170,23 @@ $_SESSION['uid'] = 1;
                     $name = $row['name'];
                     $pid = $row['pid'];
                     $link = "myMusic.php?&id=" . $pid;
-                    $str = "<TR><TD><a class = 'playlist-link' href ='$link'>$name</a></TD><TD><i  style = 'cursor:pointer' class='fa fa-trash-o' onclick='deletePlaylist()'></TD></TR>";
+                    $str = "<TR><TD><a class = 'playlist-link' href ='$link'>$name</a></TD><TD><i  style = 'cursor:pointer' class='fa fa-trash-o' onclick='deletePlaylist($pid)'></TD></TR>";
+                    print $str;
+                  }
+                }
+
+                $qStr = "SELECT name, pid FROM Playlist NATURAL JOIN followplist WHERE uid = $owner;";
+                $qRes = $db->query($qStr);
+
+                if($qRes != FALSE) {
+
+                  //display all rows from user
+
+                  while($row = $qRes->fetch()) {
+                    $name = $row['name'];
+                    $pid = $row['pid'];
+                    $link = "myMusic.php?&id=" . $pid;
+                    $str = "<TR><TD><a class = 'playlist-link' href ='$link'>$name</a></TD><TD><i  style = 'cursor:pointer' class='fa fa-trash-o' onclick='deletePlaylist($pid)'></TD></TR>";
                     print $str;
                   }
                 }
@@ -181,9 +206,18 @@ $_SESSION['uid'] = 1;
                     $name = $row['name'];
                     print " <h1 style = 'display: inline;'> $name</h1>
 
-                            <i class = 'fa fa-play' style = 'display:inline; margin:20px; cursor:pointer' onclick = 'openVideoPlayer()'></i>
-                            <p style = 'display: inline; font-size: 20px; cursor:pointer;' onclick = 'showTrack()'> + </p></br>
-                            <i class = 'fa fa-backward trackController' id ='prevTrack' style = 'display: none' onclick = 'changeTrack(0)'> </i>
+                            <i class = 'fa fa-play' style = 'display:inline; margin:20px; cursor:pointer' onclick = 'openVideoPlayer()'></i>";
+
+                            $user = $_SESSION['uid'];
+                            $pid = $_GET['id'];
+                            $checkQuery = "SELECT owner FROM Playlist WHERE pid = $pid";
+                            $resultCheck = $db->query($checkQuery);
+                            $row = $resultCheck->fetch();
+                            $owner = $row['owner'];
+                            if($user == $owner) {
+                            print " <p style = 'display: inline; font-size: 20px; cursor:pointer;' onclick = 'showTrack()'> + </p></br>";
+                            }
+                    print " <i class = 'fa fa-backward trackController' id ='prevTrack' style = 'display: none' onclick = 'changeTrack(0)'> </i>
                             <i class = 'fa fa-forward trackController' id = 'nextTrack' style = 'display: none' onclick = 'changeTrack(1)'> </i>";
                   }
                   else {
@@ -260,7 +294,8 @@ $_SESSION['uid'] = 1;
           }
         }
         /*open delete playlist modal */
-        function deletePlaylist() {
+        function deletePlaylist(pid) {
+          document.getElementById("deleteList").value = pid;
           document.getElementById("playDelete").style.display = "block";
         }
         /*hide delete playlist modal */
