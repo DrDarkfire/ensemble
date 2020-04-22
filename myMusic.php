@@ -18,8 +18,9 @@ $_SESSION['uid'] = 1;
             if($_POST['public'] == "public") {
               $public = 1;
             }
+            $uid = $_SESSION['uid'];
             $pname = $_POST['name'];
-            $queryUser = "INSERT INTO Playlist VALUES (null ,1, '$pname', $public);";
+            $queryUser = "INSERT INTO Playlist VALUES (null ,$uid, '$pname', $public, 0, null);";
           	$resultUser = $db->query($queryUser);
           }
           else if(!empty($_POST['tname'])) {
@@ -62,10 +63,39 @@ $_SESSION['uid'] = 1;
             }
 
           }
+          else if(!empty($_POST['newList'])) {
+            $public = 0;
+            if($_POST['public'] == "public") {
+              $public = 1;
+            }
+            $uid = $_SESSION['uid'];
+            $pname = $_POST['newList'];
+            $queryUser = "INSERT INTO Playlist VALUES (null ,$uid, '$pname', $public,0, null);";
+          	$resultUser = $db->query($queryUser);
+            $autoQuery = "SHOW TABLE STATUS LIKE 'Playlist'";
+            $result = $db->query($autoQuery);
+            $row = $result->fetch();
+            $next_increment = $row['Auto_increment'] - 1;
+            $p1 = $_POST['p1'];
+            $p1query = "SELECT tid FROM pid_tid WHERE pid = $p1";
+            $p1result = $db->query($p1query);
+            while($row = $p1result->fetch()) {
+              $currtid = $row['tid'];
+              $trackQuery = "INSERT INTO pid_tid VALUES ($next_increment, $currtid)";
+              $trackQuery = $db->query($trackQuery);
+            }
+            $p2 = $_POST['p2'];
+            $p2query = "SELECT tid FROM pid_tid WHERE pid = $p2";
+            $p2result = $db->query($p2query);
+            while($row = $p2result->fetch()) {
+              $currtid = $row['tid'];
+              $trackQuery = "INSERT INTO pid_tid VALUES ($next_increment, $currtid)";
+              $trackQuery = $db->query($trackQuery);
+            }
+          }
           else if(!empty($_GET['id'])) {
             $pid = $_GET['id'];
             $query = "UPDATE Playlist SET plays = plays + 1 WHERE  pid = $pid;";
-            $result = $db->query($query);
           }
         ?>
         <!-- Top bar of the webpage, contains logo and drop down menu with links -->
@@ -95,9 +125,9 @@ $_SESSION['uid'] = 1;
             <input class = "inputBox" type = "text" name = "name" placeholder = "name">
             <br />
             <input type="radio" name="public" value="public">
-            <label for="male">Public</label><br>
+            <label for="public">Public</label><br>
             <input type="radio"  name="public" value="private">
-            <label for="female">Private</label><br>
+            <label for="private">Private</label><br>
             <input style = "width: 50%;" class ="submit-button main-button" type = "submit" value = "Add playlist ">
           </form>
         </center>
@@ -150,12 +180,98 @@ $_SESSION['uid'] = 1;
         </center>
         </div>
         </div>
+        <!-- modal box for merge playlists -->
+        <div class = "modal" id ="playMerge" onclick = "closeMergeBox(event)">
+          <div class = "music-container" id = "mergeForm" style = "margin-left:auto; margin-right:auto; height: 350px;">
+            <center>
+          <h1> Merge Playlists </h1>
+          <form name="" method = "POST" action="myMusic.php">
+            <select name ="p1" style = "margin: 20px;">
+            <?php
+              $owner =  $_SESSION['uid'];
+              $qStr = "SELECT name, pid FROM Playlist WHERE owner = $owner;";
+              $qRes = $db->query($qStr);
+
+              if($qRes != FALSE) {
+
+                //display all rows from user
+
+                while($row = $qRes->fetch()) {
+                  $name = $row['name'];
+                  $pid = $row['pid'];
+                  $str = "<option value = '$pid'>$name</option>";
+                  print $str;
+                }
+              }
+
+              $qStr = "SELECT name, pid FROM Playlist NATURAL JOIN followplist WHERE uid = $owner;";
+              $qRes = $db->query($qStr);
+
+              if($qRes != FALSE) {
+
+                //display all rows from user
+
+                while($row = $qRes->fetch()) {
+                  $name = $row['name'];
+                  $pid = $row['pid'];
+                  $str = "<option value = '$pid'>$name</option>";
+                  print $str;
+                }
+              }
+              ?>
+            </select> </br>
+            <select name ="p2">
+            <?php
+              $owner =  $_SESSION['uid'];
+              $qStr = "SELECT name, pid FROM Playlist WHERE owner = $owner;";
+              $qRes = $db->query($qStr);
+
+              if($qRes != FALSE) {
+
+                //display all rows from user
+
+                while($row = $qRes->fetch()) {
+                  $name = $row['name'];
+                  $pid = $row['pid'];
+                  $str = "<option value = '$pid'>$name</option>";
+                  print $str;
+                }
+              }
+
+              $qStr = "SELECT name, pid FROM Playlist NATURAL JOIN followplist WHERE uid = $owner;";
+              $qRes = $db->query($qStr);
+
+              if($qRes != FALSE) {
+
+                //display all rows from user
+
+                while($row = $qRes->fetch()) {
+                  $name = $row['name'];
+                  $pid = $row['pid'];
+                  $str = "<option value = '$pid'>$name</option>";
+                  print $str;
+                }
+              }
+              ?>
+            </select> </br>
+            <input type = 'text' name = 'newList' class = "inputBox" placeholder ="Merged Playlist name"/>
+            </br>
+            <input type="radio" name="public" value="public">
+            <label for="public">Public</label><br>
+            <input type="radio"  name="public" value="private">
+            <label for="private">Private</label><br>
+            <input style = "width: 50%;" class ="submit-button main-button" type = "submit" value = "Merge Playlists">
+          </form>
+        </center>
+        </div>
+        </div>
         <!-- Users lists of playlists  -->
         <div class = "playlist-grid">
           <div class = "music-container">
             <center>
                 <h1 style = "display: inline;"> Playlists </h1>
-                <p style = "display: inline; font-size: 20px; cursor:pointer;" onclick = "showAdd()"> + </p>
+                <i  style = 'display:inline; margin:5px; cursor:pointer' class='fa fa-plus' onclick='showAdd()'></i>
+                <i class = 'fa fa-exchange' style = 'display:inline; margin:5px; cursor:pointer' onclick = 'openMerge()'></i>
                 <table class = "music-table" cellspacing ="5" cellpadding="10">
               <?php
                 $owner =  $_SESSION['uid'];
@@ -296,12 +412,22 @@ $_SESSION['uid'] = 1;
         /*open delete playlist modal */
         function deletePlaylist(pid) {
           document.getElementById("deleteList").value = pid;
-          document.getElementById("playDelete").style.display = "block";
+          document.getElementById("playMerge").style.display = "block";
         }
         /*hide delete playlist modal */
         function closeTrackBoxD(e) {
           if(e.target.id == "playDelete") {
             document.getElementById("playDelete").style.display = "none";
+          }
+        }
+        /*open merge playlist modal */
+        function openMerge() {
+          document.getElementById("playMerge").style.display = "block";
+        }
+        /*hide delete playlist modal */
+        function closeMergeBox(e) {
+          if(e.target.id == "playMerge") {
+            document.getElementById("playMerge").style.display = "none";
           }
         }
         /*keep track of track playing */

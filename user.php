@@ -75,7 +75,7 @@
                       $own = $row['user'];
                       $plays = $row['plays'];
                       $pid = $row['pid'];
-                      $str = "<tr><td>$name</td><td>$own</td><td>$plays</td><td><i  style = 'cursor:pointer' class='fa fa-plus' onclick='addPlaylist($pid)'></td></tr>";
+                      $str = "<tr><td>$name</td><td>$own</td><td>$plays</td><td><i  style = 'cursor:pointer' class='fa fa-plus' onclick='addPlaylist($pid)'></i></td></tr>";
                       print $str;
                     }
                   }
