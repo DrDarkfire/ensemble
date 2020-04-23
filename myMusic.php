@@ -13,6 +13,11 @@ $_SESSION['uid'] = 1;
     <body>
         <?php
           include_once("db_connect.php");
+          if(!empty($_GET['id'])) {
+            $pid = $_GET['id'];
+            $query = "UPDATE Playlist SET plays = plays + 1 WHERE  pid = $pid;";
+            $result = $db->query($query);
+          }
           if(!empty($_POST['name'])) {
             $public = 0;
             if($_POST['public'] == "public") {
@@ -92,10 +97,6 @@ $_SESSION['uid'] = 1;
               $trackQuery = "INSERT INTO pid_tid VALUES ($next_increment, $currtid)";
               $trackQuery = $db->query($trackQuery);
             }
-          }
-          else if(!empty($_GET['id'])) {
-            $pid = $_GET['id'];
-            $query = "UPDATE Playlist SET plays = plays + 1 WHERE  pid = $pid;";
           }
         ?>
         <!-- Top bar of the webpage, contains logo and drop down menu with links -->
@@ -412,7 +413,7 @@ $_SESSION['uid'] = 1;
         /*open delete playlist modal */
         function deletePlaylist(pid) {
           document.getElementById("deleteList").value = pid;
-          document.getElementById("playMerge").style.display = "block";
+          document.getElementById("playDelete").style.display = "block";
         }
         /*hide delete playlist modal */
         function closeTrackBoxD(e) {
