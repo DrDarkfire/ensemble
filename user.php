@@ -30,7 +30,7 @@
                 <i class="fa fa-bars" style = "color:#FFD700"></i>
                 <div class="dropdown-content">
                   <a href="user.php" >What's new</a>
-                  <a href="#" >My Ensemble</a>
+                  <a href="profile.php" >My Ensemble</a>
                   <a href="myMusic.php" >My Music</a>
                   <a href="updateProfile.php" >Edit Profile</a>
                 </div>
@@ -60,8 +60,8 @@
               <table class = "music-table" cellspacing ="5" cellpadding="10">
                 <?php
                   $user = $_SESSION['uid'];
-                  $query = "SELECT Playlist.name, ensemble.name as user, plays, pid
-                            FROM Playlist JOIN ensemble ON owner = uid
+                  $query = "SELECT Playlist.name, user.username as user, plays, pid
+                            FROM Playlist JOIN user ON owner = uid
                             WHERE uid <> $user AND public = 1
                             ORDER BY plays DESC;";
                   $result = $db->query($query);
@@ -89,12 +89,12 @@
             <table class = "music-table" cellspacing ="5" cellpadding="10">
               <?php
                 $user = $_SESSION['uid'];
-                $query = "SELECT Playlist.name, ensemble.name as user, plays, pid
+                $query = "SELECT Playlist.name, user.username as user, plays, pid
                           FROM (SELECT fid
-	                              FROM friends
+	                              FROM follow
 	                              WHERE uid = $user) AS A
                           JOIN Playlist on fid = owner
-                          JOIN ensemble on fid = uid
+                          JOIN user on fid = uid
                           WHERE public = $user
                           ORDER BY plays DESC;";
                 $result = $db->query($query);
@@ -122,12 +122,12 @@
             <table class = "music-table" cellspacing ="5" cellpadding="10">
               <?php
                 $user = $_SESSION['uid'];
-                $query = "SELECT Playlist.name, ensemble.name as user, pid
+                $query = "SELECT Playlist.name, user.username as user, pid
                           FROM (SELECT fid
-                                FROM friends
+                                FROM follow
                                 WHERE uid = $user) AS A
                           JOIN Playlist on fid = owner
-                          JOIN ensemble on fid = uid
+                          JOIN user on fid = uid
                           WHERE public = $user
                           ORDER BY created DESC;";
                 $result = $db->query($query);

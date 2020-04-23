@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 $_SESSION['uid'] = 4;
 ?>
@@ -23,7 +23,7 @@ $_SESSION['uid'] = 4;
             <div class="menu-icon dropdown">
               <i class="fa fa-bars" style = "color:#FFD700"></i>
               <div class="dropdown-content">
-                <a href="user.html" >What's new</a>
+                <a href="user.php" >What's new</a>
                 <a href="#" >My Ensemble</a>
                 <a href="#" >My Music</a>
                 <a href="updateProfile.php" >Edit Profile</a>
@@ -45,8 +45,8 @@ $_SESSION['uid'] = 4;
 		$username = $row['username'];
 		$email = $row['email'];
 		$bdate = $row['bdate'];
-	  }		
-	?> 
+	  }
+	?>
         <div class = "input">
             <center>
                <div class = "form-container">
@@ -73,9 +73,9 @@ $_SESSION['uid'] = 4;
 	      <?php
 		$qStr = "SELECT * FROM user WHERE uid IN (SELECT fid FROM follow WHERE uid = $uid);";
 		$qRes = $db->query($qStr);
-		if ($qRes != FALSE) 
+		if ($qRes != FALSE)
 		{
-		  while ($row = $qRes->fetch()) 
+		  while ($row = $qRes->fetch())
 		  {
 		    $username = $row['username'];
 		    $follow_id = $row['uid'];
@@ -120,7 +120,7 @@ $_SESSION['uid'] = 4;
 			<TR><TD>Playlist 2</TD></TR>
 		</table>
 	   </div>
-	    
+
 
 
         <!-- footer -->
@@ -140,7 +140,7 @@ $_SESSION['uid'] = 4;
     }
 
     function viewProfile(id) {
-	    
+
     }
     </script>
 </html>

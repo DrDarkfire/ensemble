@@ -1,6 +1,6 @@
 <?php
 session_start();
-$_SESSION['uid'] = 4;
+$_SESSION['uid'] = 1;
 $_SESSION['fid'] = 3;
 ?>
 
@@ -38,13 +38,13 @@ $_SESSION['fid'] = 3;
 	$fid = $_SESSION['fid'];
 	$qStr = "SELECT DISTINCT username FROM user WHERE uid=$fid;";
 	$qRes = $db->query($qStr);
-	
+
 	if ($qRes != FALSE) {
 		$qRow = $qRes->fetch();
 		$username = $qRow['username'];
 	}
 	?>
-	
+
 
         <div>
           <div class = "other-profile">
@@ -80,7 +80,7 @@ $_SESSION['fid'] = 3;
                 <TR><TD><img class = "table-pro-pic"src = "https://pbs.twimg.com/profile_images/1155645244563742721/tuCu6BT-_400x400.jpg"/></TD><TD>Name</TD></TR>
                 <TR><TD><img class = "table-pro-pic"src = "https://pbs.twimg.com/profile_images/1155645244563742721/tuCu6BT-_400x400.jpg"/></TD><TD>Name</TD></TR>
                 <TR><TD><img class = "table-pro-pic"src = "https://pbs.twimg.com/profile_images/1155645244563742721/tuCu6BT-_400x400.jpg"/></TD><TD>Name</TD></TR>
-                
+
               </table>
               </center>
             </div>
@@ -103,7 +103,7 @@ $_SESSION['fid'] = 3;
 				}
 		}
 		?>
-      
+
               </table>
               </center>
             </div>
