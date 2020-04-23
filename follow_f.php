@@ -15,7 +15,7 @@ $qRes = $db->query($qStr);
 
 print_r($qStr);
 
-header("Location: http://www.cs.gettysburg.edu/~tibech01/ensemble/otherUser.php");
+header("Location: http://www.cs.gettysburg.edu/~trinma01/ensemble/otherUser.php");
 
 
 
