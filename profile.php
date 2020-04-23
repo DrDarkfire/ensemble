@@ -1,6 +1,6 @@
 <?php
 session_start();
-$_SESSION['uid'] = 4;
+$_SESSION['uid'] = 1;
 ?>
 
 <!DOCTYPE html>

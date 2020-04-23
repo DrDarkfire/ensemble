@@ -1,7 +1,7 @@
 <?php
 //session_start();
-$_SESSION['uid'] = 4;
-$_SESSION['fid'] = 3;
+$_SESSION['uid'] = 1;
+$_SESSION['fid'] = 4;
 ?>
 
 <?php
@@ -15,7 +15,7 @@ $qRes = $db->query($qStr);
 
 print_r($qStr);
 
-header("Location: http://www.cs.gettysburg.edu/~trinma01/ensemble/otherUser.php");
+header("Location: http://www.cs.gettysburg.edu/~tibech01/ensemble/otherUser.php");
 
 
 

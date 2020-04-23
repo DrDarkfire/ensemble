@@ -60,7 +60,7 @@
               <table class = "music-table" cellspacing ="5" cellpadding="10">
                 <?php
                   $user = $_SESSION['uid'];
-                  $query = "SELECT Playlist.name, user.username as user, plays, pid
+                  $query = "SELECT Playlist.name, user.username as user, plays, pid, uid
                             FROM Playlist JOIN user ON owner = uid
                             WHERE uid <> $user AND public = 1
                             ORDER BY plays DESC;";
@@ -75,7 +75,9 @@
                       $own = $row['user'];
                       $plays = $row['plays'];
                       $pid = $row['pid'];
-                      $str = "<tr><td>$name</td><td>$own</td><td>$plays</td><td><i  style = 'cursor:pointer' class='fa fa-plus' onclick='addPlaylist($pid)'></i></td></tr>";
+                      $fid = $row['uid'];
+                      $link = "otherUser.php?&fid=" . $fid;
+                      $str = "<tr><td>$name</td><td><a class = 'playlist-link' href ='$link'>$own</a></td><td>$plays</td><td><i  style = 'cursor:pointer' class='fa fa-plus' onclick='addPlaylist($pid)'></i></td></tr>";
                       print $str;
                     }
                   }
@@ -89,7 +91,7 @@
             <table class = "music-table" cellspacing ="5" cellpadding="10">
               <?php
                 $user = $_SESSION['uid'];
-                $query = "SELECT Playlist.name, user.username as user, plays, pid
+                $query = "SELECT Playlist.name, user.username as user, plays, pid, uid
                           FROM (SELECT fid
 	                              FROM follow
 	                              WHERE uid = $user) AS A
@@ -108,7 +110,9 @@
                     $own = $row['user'];
                     $plays = $row['plays'];
                     $pid = $row['pid'];
-                    $str = "<tr><td>$name</td><td>$own</td><td>$plays</td><td><i  style = 'cursor:pointer' class='fa fa-plus' onclick='addPlaylist($pid)'></td></tr>";
+                    $fid = $row['uid'];
+                    $link = "otherUser.php?&fid=" . $fid;
+                    $str = "<tr><td>$name</td><td><a class = 'playlist-link' href ='$link'>$own</a></td><td>$plays</td><td><i  style = 'cursor:pointer' class='fa fa-plus' onclick='addPlaylist($pid)'></td></tr>";
                     print $str;
                   }
                 }
@@ -122,7 +126,7 @@
             <table class = "music-table" cellspacing ="5" cellpadding="10">
               <?php
                 $user = $_SESSION['uid'];
-                $query = "SELECT Playlist.name, user.username as user, pid
+                $query = "SELECT Playlist.name, user.username as user, pid, user.uid AS fid
                           FROM (SELECT fid
                                 FROM follow
                                 WHERE uid = $user) AS A
@@ -140,7 +144,9 @@
                     $name = $row['name'];
                     $own = $row['user'];
                     $pid = $row['pid'];
-                    $str = "<tr><td>$name</td><td>$own</td><td><i  style = 'cursor:pointer' class='fa fa-plus' onclick='addPlaylist($pid)'></td></tr>";
+                    $fid = $row['fid'];
+                    $link = "otherUser.php?&fid=" . $fid;
+                    $str = "<tr><td>$name</td><td><a class = 'playlist-link' href ='$link'>$own</a></td><td><i  style = 'cursor:pointer' class='fa fa-plus' onclick='addPlaylist($pid)'></td></tr>";
                     print $str;
                   }
                 }
@@ -148,24 +154,6 @@
             </table>
             </center>
           </div>
-          <div class = "music-container">
-            <center>
-            <h2> Music you might like </h2>
-            <table class = "music-table" cellspacing ="5" cellpadding="10">
-              <TR><TD>Fake Song</TD></TR>
-              <TR><TD>Fake Song</TD></TR>
-              <TR><TD>Fake Song</TD></TR>
-              <TR><TD>Fake Song</TD></TR>
-              <TR><TD>Fake Song</TD></TR>
-              <TR><TD>Fake Song</TD></TR>
-              <TR><TD>Fake Song</TD></TR>
-              <TR><TD>Fake Song</TD></TR>
-              <TR><TD>Fake Song</TD></TR>
-              <TR><TD>Fake Song</TD></TR>
-            </table>
-            </center>
-          </div>
-
         </div>
         <!-- footer -->
         <div class = "footer">
