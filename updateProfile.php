@@ -1,6 +1,6 @@
 <?php 
 session_start();
-$_SESSION["uid"] = 1;
+$_SESSION['uid'] = 2;
 ?>
 
 <!DOCTYPE html>
@@ -10,7 +10,7 @@ $_SESSION["uid"] = 1;
         <meta name = "Sample Site">
         <title>Ensemble</title>
         <link rel="stylesheet" type="text/css" href="ensemble.css">
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     <body>
       <!-- Top bar of the webpage, contains logo and drop down menu with links -->
@@ -26,26 +26,26 @@ $_SESSION["uid"] = 1;
                 <a href="user.html" >What's new</a>
                 <a href="#" >My Ensemble</a>
                 <a href="#" >My Music</a>
-                <a href="updateProfile.html" >Edit Profile</a>
+                <a href="updateProfile.php" >Edit Profile</a>
               </div>
             </div>
          </div>
       </div>
         <!-- Main portion of this page contianing the form to sign-up -->
-	
-	<!-- php code to retrieve user's old data from db-->
 	<?php
-	
-	include_once("db_connect.php");
-	$uid = $_SESSION["uid"];
+		include_once("db_connect.php");
+		$uid = $_SESSION['uid'];
 
-	$query = "SELECT username, email, bdate FROM user WHERE uid=$uid;";
-	$res = $db->query($query);
-	$result = $res->fetch();
-	
-	$username = $result['username'];
-	$email = $result['email'];
-	$bdate = $result['bdate'];
+		$query = "SELECT * FROM user WHERE uid=$uid;";
+		$qRes = $db->query($query);
+
+		if ($qRes != FALSE) {
+			$row = $qRes->fetch();
+			$username = $row['username'];
+			$email = $row['email'];
+			$bdate = $row['bdate'];
+		}
+		
 	?> 
 
         <div class = "input">
@@ -59,7 +59,12 @@ $_SESSION["uid"] = 1;
                    <br />
                    <input class = "inputBox" type = "text" name = "bdate" value = "<?php echo $bdate; ?>" onfocus="(this.type='date')"/>
                    <br />
-                   <input class ="submit-button main-button" type = "submit" value = "Update your Profile">
+		   <h2 style = "color:#333"> Change your password</h2>
+		   <input class = "inputBox" type = "password" name = "currentpw" placeholder="Your current password"/>
+                   <br />
+		   <input class = "inputBox" type = "password" name = "newpw" placeholder="Your new password"/>
+                   <br />
+                   <input class ="submit-button main-button" type = "submit" value = "Update your Profile" >
                  </form>
                 </div>
             </center>
