@@ -1,6 +1,5 @@
 <?php
 session_start();
-$_SESSION['uid'] = 1;
 ?>
 <html>
     <head>
@@ -110,7 +109,7 @@ $_SESSION['uid'] = 1;
                 <i class="fa fa-bars" style = "color:#FFD700"></i>
                 <div class="dropdown-content">
                   <a href="user.php" >What's new</a>
-                  <a href="#" >My Ensemble</a>
+                  <a href="profile.php" >My Ensemble</a>
                   <a href="myMusic.php" >My Music</a>
                   <a href="updateProfile.php" >Edit Profile</a>
                 </div>

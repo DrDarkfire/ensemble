@@ -1,6 +1,9 @@
 <?php
   session_start();
-  $_SESSION['uid'] = 1;
+  if(!isset($_SESSION['uid']) || ($_SESSION['uid'] != $_GET['uid'] && !empty($_GET['uid']))) {
+      $_SESSION['uid'] = $_GET['uid'];
+  }
+
 ?>
 <html>
     <head>

@@ -1,6 +1,5 @@
 <?php
 session_start();
-$_SESSION['uid'] = 1;
 ?>
 
 <!DOCTYPE html>
@@ -49,7 +48,7 @@ $_SESSION['uid'] = 1;
           <div class = "other-profile">
             <img class = "other-profile-pic" src = "https://pbs.twimg.com/profile_images/1155645244563742721/tuCu6BT-_400x400.jpg">
             <p class = "other-profile-name"> <?php echo $username; ?> </p>
-	           <input type='button' class ='follow-button' id='follow_btn' value = 'Follow' onclick='window.location.href='follow_f.php''>
+	           <input type='button' class ='follow-button' id='follow_btn' value = 'Follow' onclick='follow(<?php echo $fid; ?>)''>
           </div>
 
           <hr style = "border: 2px solid black; width: 90%">
@@ -157,4 +156,10 @@ $_SESSION['uid'] = 1;
             </center>
         </div>
     </body>
+    <script>
+	   function follow(other_id) {
+		     var link = "http://www.cs.gettysburg.edu/~tibech01/cs360/ensemble/follow_f.php?&id=" + other_id;
+	    	   window.location.href = link;
+	       }
+	</script>
 </html>

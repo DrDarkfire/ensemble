@@ -1,11 +1,11 @@
 <?php
 // add a new user to the user table + add the user's username
-// into the unverified table 
+// into the unverified table
 function addUser($db, $username, $pass, $email, $bdate) {
 
-	$hashedPass = md5($pass);
+	$hashedPass = hash('md5', $pass);
 
-	$queryUser = "INSERT INTO user (username, hashPass, email, bdate) VALUES ('$username','$pass','$email',$bdate);";
+	$queryUser = "INSERT INTO user (uid, username, passHash, email, bdate) VALUES (null, '$username','$hashedPass','$email',$bdate);";
 	$resultUser = $db->query($queryUser);
 
 	$queryUnve = "INSERT INTO unverified VALUE ('$username');";
@@ -17,16 +17,16 @@ function addUser($db, $username, $pass, $email, $bdate) {
 }
 
 function checkUser($db, $username, $pass) {
-	$hashedPass = md5($pass); 
+	$hashedPass = hash('md5', $pass);
 
 	$qStrUser = "SELECT * FROM user WHERE username='$username';";
-	$qStrUnve = "SELECT * FROM unverified WHERE username='$username';";
+	$qStrUnve = "SELECT * FROM unverified WHERE ulogin='$username';";
 	$qStrPass = "SELECT passHash FROM user WHERE username='$username';";
 
 	$qResUser = $db->query($qStrUser);
 	$qResPass = $db->query($qStrPass);
 	$qResUnve = $db->query($qStrUnve);
-	
+
 
 	// if the user doesnt exists
 	if ($qResUser->rowCount() == 0) {
@@ -48,7 +48,7 @@ function checkUser($db, $username, $pass) {
 	}
 }
 
-// register a user 
+// register a user
 function registerUser($db, $input) {
 	$username = $input['username'];
 	$pass  = $input['password'];
@@ -56,30 +56,30 @@ function registerUser($db, $input) {
 	$email = $input['email'];
 	$bdate = $input['bdate'];
 
-	// if user exists 
+	// if user exists
 	if (checkUser($db, $username, $pass) != -1) {
 		return false;
 	}
 	// user doesnt exist -> create new user
-	// if password match 
+	// if password match
 	if ($pass == $repass) {
 		addUser($db, $username, $pass, $email, $bdate);
 		// compose a link
 		$subject = "Verify Email Address";
-		$link = "http://www.cs.gettysburg.edu/~trinma01/cs360/hw4/verify.php?uid=$username"; 
+		$link = "http://www.cs.gettysburg.edu/~tibech01/cs360/ensemble/verify.php?&uid=$username";
 		$msg = "Your account has been created. Please verify your email by clicking on the link: $link";
 		mail($email, $subject, $msg);
 	}
-	return true; 
+	return true;
 }
 
-// remove the given username from unverified table 
+// remove the given username from unverified table
 function verifyEmail($db, $username) {
 	//print("verifyEmail function called");
-	$query = "DELETE FROM unverified WHERE username='$username';";
+	$query = "DELETE FROM unverified WHERE ulogin='$username';";
 	$result = $db->query($query);
 
-	$check_query = "SELECT * FROM unverified WHERE username='$username';";
+	$check_query = "SELECT * FROM unverified WHERE ulogin='$username';";
 	$check_result = $db->query($check_query);
 
 	if ($check_result->rowCount() == 0) {
@@ -88,18 +88,18 @@ function verifyEmail($db, $username) {
 }
 
 // update user username, email and bday in profile
-function updateProfile($db, $username, $email, $bdate) {
-	$query = "SELECT * FROM user WHERE uid=1;";
+function updateProfile($db, $username, $email, $bdate, $uid) {
+	$query = "SELECT * FROM user WHERE uid = $uid";
 	$res = $db->query($query);
-	
+
 	if ($res->rowCount() == 0) {
 		return -1;
 	}
 	else {
-		$queryUpdate = "UPDATE user SET username = '$username', email = '$email', bdate = '$bdate' WHERE uid=1;"; //hard-coded uid for now
+		$queryUpdate = "UPDATE user SET username = '$username', email = '$email', bdate = $bdate WHERE uid=$uid;"; //hard-coded uid for now
 		$resultUpdate = $db->query($queryUpdate);
 
-		$queryCheck = "SELECT username, email, bdate FROM user WHERE uid=1;";
+		$queryCheck = "SELECT username, email, bdate FROM user WHERE uid=$uid;";
 		$resultCheck = $db->query($queryCheck);
 		$result = $resultCheck->fetch();
 
