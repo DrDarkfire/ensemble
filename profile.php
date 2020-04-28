@@ -129,7 +129,8 @@ session_start();
     }
 
     function viewProfile(id) {
-
+      var link = "http://www.cs.gettysburg.edu/~tibech01/cs360/ensemble/otherUser.php?&fid=" + id;
+	    window.location.href = link;
     }
     </script>
 </html>
