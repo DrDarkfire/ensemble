@@ -5,7 +5,7 @@ function addUser($db, $username, $pass, $email, $bdate) {
 
 	$hashedPass = hash('md5', $pass);
 
-	$queryUser = "INSERT INTO user (uid, username, passHash, email, bdate) VALUES (null, '$username','$hashedPass','$email',$bdate);";
+	$queryUser = "INSERT INTO user (uid, username, passHash, email, bdate) VALUES (null, '$username','$hashedPass','$email','$bdate');";
 	$resultUser = $db->query($queryUser);
 
 	$queryUnve = "INSERT INTO unverified VALUE ('$username');";
@@ -88,27 +88,25 @@ function verifyEmail($db, $username) {
 }
 
 // update user username, email and bday in profile
-function updateProfile($db, $username, $email, $bdate, $uid) {
-	$query = "SELECT * FROM user WHERE uid = $uid";
-	$res = $db->query($query);
-
-	if ($res->rowCount() == 0) {
-		return -1;
-	}
-	else {
-		$queryUpdate = "UPDATE user SET username = '$username', email = '$email', bdate = $bdate WHERE uid=$uid;"; //hard-coded uid for now
-		$resultUpdate = $db->query($queryUpdate);
-
-		$queryCheck = "SELECT username, email, bdate FROM user WHERE uid=$uid;";
-		$resultCheck = $db->query($queryCheck);
-		$result = $resultCheck->fetch();
-
-		if ($username == $result['username'] AND $email == $result['email'] AND $bdate == $result['bdate']) {
-			return 1;
-		}
-		else {
-			return -2;
-		}
-	}
+function updateProfile($db, $uid, $username, $password, $email,$bdate) {
+    $hashedPass =  hash('md5', $password);
+    $query = "SELECT * FROM user WHERE uid=$uid;";
+    $res = $db->query($query);
+    if ($res->rowCount() == 0) {
+        return -1;
+    }
+    else {
+        $queryUpdate = "UPDATE user SET username = '$username', passHash = '$hashedPass', email = '$email', bdate = '$bdate' WHERE uid=$uid;";
+        $resultUpdate = $db->query($queryUpdate);
+        $queryCheck = "SELECT username, passHash, email, bdate FROM user WHERE uid=$uid;";
+        $resultCheck = $db->query($queryCheck);
+        $result = $resultCheck->fetch();
+        if ($username == $result['username'] && $hashedPass == $result['passHash'] && $email == $result['email'] && $bdate == $result['bdate']) {
+						return 1;
+        }
+        else {
+            return -2;
+        }
+    }
 }
 ?>

@@ -1,6 +1,5 @@
-<?php 
+<?php
 session_start();
-$_SESSION['uid'] = 2;
 ?>
 
 <!DOCTYPE html>
@@ -23,9 +22,9 @@ $_SESSION['uid'] = 2;
             <div class="menu-icon dropdown">
               <i class="fa fa-bars" style = "color:#FFD700"></i>
               <div class="dropdown-content">
-                <a href="user.html" >What's new</a>
-                <a href="#" >My Ensemble</a>
-                <a href="#" >My Music</a>
+                <a href="user.php" >What's new</a>
+                <a href="profile.php" >My Ensemble</a>
+                <a href="myMusic.php" >My Music</a>
                 <a href="updateProfile.php" >Edit Profile</a>
               </div>
             </div>
@@ -45,8 +44,8 @@ $_SESSION['uid'] = 2;
 			$email = $row['email'];
 			$bdate = $row['bdate'];
 		}
-		
-	?> 
+
+	?>
 
         <div class = "input">
             <center>
