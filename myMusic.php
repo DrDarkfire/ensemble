@@ -135,12 +135,14 @@ session_start();
         </div>
         <!-- modal box for add track -->
         <div class = "modal" id ="trackBox" onclick = "closeTrackBox(event)">
-          <div class = "music-container" id = "trackForm" style = "margin-left:auto; margin-right:auto">
+          <div class = "music-container" id = "trackForm" style = "margin-left:auto; margin-right:auto; height: 450px;">
             <center>
           <h1> Add a song </h1>
           <form name="" method = "POST" action="myMusic.php">
             <input class = "inputBox" type = "text" name = "tname" placeholder = "Song name">
             <br />
+            <div>
+            </div>
             <input class = "inputBox" type = "text" name = "link" placeholder = "link">
             <br />
             <?php
@@ -149,6 +151,29 @@ session_start();
             ?>
             <input style = "width: 50%;" class ="submit-button main-button" type = "submit" value = "Add Song">
           </form>
+
+          <button class = "main-button" style = "display:inline" onClick = "showYou()">Click for youtube instructions</button>
+          <button class = "main-button" style = "display:inline" onClick = "showCloud()">Click for soundcloud instructions</button>
+          <div style = "display:none" id = "youIns">
+           </br>
+            <p>1. Go to the youtube video you want to add and click share</p>
+            </br>
+            <p>2. From there click on "embed" and copy the link located after src and between the two "</p>
+            </br>
+            <p>3. paste this link into the link input box above</p>
+            </br>
+            <p>4. add ?autoplay=1 to the end of your link.</p>
+          </div>
+          <div style = "display:none" id = "cloudIns">
+           </br>
+            <p>1. Go to the soundcloud song you want to add and click share</p>
+            </br>
+            <p>2. From there click on "embed" and copy the link located after src and between the two "</p>
+            </br>
+            <p>3. paste this link into the link input box above</p>
+            </br>
+            <p>4. change the autoplay=false to autoplay=true</p>
+          </div>
         </center>
         </div>
         </div>
@@ -331,9 +356,9 @@ session_start();
                             $row = $resultCheck->fetch();
                             $owner = $row['owner'];
                             if($user == $owner) {
-                            print " <p style = 'display: inline; font-size: 20px; cursor:pointer;' onclick = 'showTrack()'> + </p></br>";
+                            print " <p style = 'display: inline; font-size: 20px; cursor:pointer;' onclick = 'showTrack()'> + </p>";
                             }
-                    print " <i class = 'fa fa-backward trackController' id ='prevTrack' style = 'display: none' onclick = 'changeTrack(0)'> </i>
+                    print " </br><i class = 'fa fa-backward trackController' id ='prevTrack' style = 'display: none' onclick = 'changeTrack(0)'> </i>
                             <i class = 'fa fa-forward trackController' id = 'nextTrack' style = 'display: none' onclick = 'changeTrack(1)'> </i>";
                   }
                   else {
@@ -477,6 +502,18 @@ session_start();
           document.getElementById("framePlayer").src = firstSrc;
           document.getElementById("framePlayer").src =   document.getElementById("framePlayer").src;
           updateVideoPlayer();
+        }
+
+        /* functions to show instructions*/
+        /*  show youtube instructions */
+        function showYou() {
+          document.getElementById("youIns").style.display = "block";
+          document.getElementById("cloudIns").style.display = "none";
+        }
+        /*show soundcloud instructions */
+        function showCloud() {
+          document.getElementById("youIns").style.display = "none";
+          document.getElementById("cloudIns").style.display = "block";
         }
 
     </script>

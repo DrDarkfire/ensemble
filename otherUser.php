@@ -129,7 +129,7 @@ session_start();
                 $user = $_SESSION['uid'];
                 $query = "SELECT name
                           FROM Playlist
-                          WHERE owner = $fid;";
+                          WHERE owner = $fid AND public = 1;";
                 $result = $db->query($query);
 
                 if($result != FALSE) {
