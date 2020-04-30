@@ -1,4 +1,5 @@
 <?php
+//Author: Mai Trinh
 session_start();
 ?>
 

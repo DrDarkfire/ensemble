@@ -1,4 +1,6 @@
+
 <?php
+//Author:  Mai Trinh
 // mysql connection script
 $host="ada.cc.gettysburg.edu";
 $dbase="s20_tibech01";

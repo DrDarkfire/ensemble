@@ -1,4 +1,5 @@
 <?php
+//Author:  Mai Trinh
 // add a new user to the user table + add the user's username
 // into the unverified table
 function addUser($db, $username, $pass, $email, $bdate) {

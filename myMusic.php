@@ -1,4 +1,5 @@
 <?php
+//Author: Chase Tiberi
 session_start();
 ?>
 <html>

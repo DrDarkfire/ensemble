@@ -1,4 +1,5 @@
 <?php
+//Author: Chase Tiberi
   session_start();
   if(!isset($_SESSION['uid']) || ($_SESSION['uid'] != $_GET['uid'] && !empty($_GET['uid']))) {
       $_SESSION['uid'] = $_GET['uid'];

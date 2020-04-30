@@ -1,4 +1,5 @@
 <?php
+//Author: Mai Trinh
 include_once("db_connect.php");
 include_once("hw4utils.php");
 

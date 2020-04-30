@@ -1,5 +1,5 @@
 <?php
-
+//Author: Mai Trinh
 //print_r($_POST);
 
 include_once("db_connect.php");

@@ -1,4 +1,5 @@
 <?php
+//author: Mai Trinh
 session_start();
 include_once("db_connect.php");
 
