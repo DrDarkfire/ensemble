@@ -1,6 +1,6 @@
-<?php 
+<?php
+//Author: Mai Trinh
 session_start();
-$_SESSION['uid'] = 4;
 ?>
 
 <!DOCTYPE html>
@@ -23,9 +23,9 @@ $_SESSION['uid'] = 4;
             <div class="menu-icon dropdown">
               <i class="fa fa-bars" style = "color:#FFD700"></i>
               <div class="dropdown-content">
-                <a href="user.html" >What's new</a>
-                <a href="#" >My Ensemble</a>
-                <a href="#" >My Music</a>
+                <a href="user.php" >What's new</a>
+                <a href="profile.php" >My Ensemble</a>
+                <a href="myMusic.php" >My Music</a>
                 <a href="updateProfile.php" >Edit Profile</a>
               </div>
             </div>
@@ -45,8 +45,8 @@ $_SESSION['uid'] = 4;
 		$username = $row['username'];
 		$email = $row['email'];
 		$bdate = $row['bdate'];
-	  }		
-	?> 
+	  }
+	?>
         <div class = "input">
             <center>
                <div class = "form-container">
@@ -73,9 +73,9 @@ $_SESSION['uid'] = 4;
 	      <?php
 		$qStr = "SELECT * FROM user WHERE uid IN (SELECT fid FROM follow WHERE uid = $uid);";
 		$qRes = $db->query($qStr);
-		if ($qRes != FALSE) 
+		if ($qRes != FALSE)
 		{
-		  while ($row = $qRes->fetch()) 
+		  while ($row = $qRes->fetch())
 		  {
 		    $username = $row['username'];
 		    $follow_id = $row['uid'];
@@ -113,16 +113,6 @@ $_SESSION['uid'] = 4;
 		      </table>
 	    </div>
 
-	   <div class = "music-container">
-		<h2> Your playlists</h2>
-		<table class = "music-table" cellspacing ="5" cellpadding="10">
-			<TR><TD>Playlist 1</TD></TR>
-			<TR><TD>Playlist 2</TD></TR>
-		</table>
-	   </div>
-	    
-
-
         <!-- footer -->
         <div class = "footer">
             <center>
@@ -140,7 +130,8 @@ $_SESSION['uid'] = 4;
     }
 
     function viewProfile(id) {
-	    
+      var link = "http://www.cs.gettysburg.edu/~tibech01/cs360/ensemble/otherUser.php?&fid=" + id;
+	    window.location.href = link;
     }
     </script>
 </html>

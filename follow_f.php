@@ -1,21 +1,20 @@
 <?php
-//session_start();
-$_SESSION['uid'] = 4;
-$_SESSION['fid'] = 3;
+//Author:  Mai Trinh
+session_start();
 ?>
 
 <?php
 include_once("db_connect.php");
 
 $uid = $_SESSION['uid'];
-$fid = $_SESSION['fid'];
+$fid = $_GET['id'];
 
 $qStr = "INSERT INTO follow VALUE($uid, $fid);";
 $qRes = $db->query($qStr);
 
 print_r($qStr);
 
-header("Location: http://www.cs.gettysburg.edu/~trinma01/ensemble/otherUser.php");
+header("Location: http://www.cs.gettysburg.edu/~tibech01/cs360/ensemble/otherUser.php?&fid=$fid");
 
 
 

@@ -1,5 +1,5 @@
 <?php
-
+//Author: Mai Trinh
 include_once("db_connect.php");
 require_once("hw4utils.php");
 
@@ -11,7 +11,7 @@ if ($registered == FALSE) {
 	print("<P>You already have an account</P>");
 }
 else {
-	registerUser($db, $_POST);
+	header("Location: http://www.cs.gettysburg.edu/~tibech01/cs360/ensemble/login.html");
 }
 
 //addUser($db, $login, $pass,CURRENT_TIMESTAMP, $email);

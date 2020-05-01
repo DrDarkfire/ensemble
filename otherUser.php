@@ -1,7 +1,6 @@
 <?php
+//Author: Chase Tiberi
 session_start();
-$_SESSION['uid'] = 4;
-$_SESSION['fid'] = 3;
 ?>
 
 <!DOCTYPE html>
@@ -24,10 +23,10 @@ $_SESSION['fid'] = 3;
               <div class="menu-icon dropdown">
                 <i class="fa fa-bars" style ="color:#FFD700"></i>
                 <div class="dropdown-content">
-                  <a href="user.html" >What's new</a>
+                  <a href="user.php" >What's new</a>
                   <a href="profile.php" >My Ensemble</a>
                   <a href="myMusic.php" >My Music</a>
-                  <a href="updateProfile.html" >Edit Profile</a>
+                  <a href="updateProfile.php" >Edit Profile</a>
                 </div>
               </div>
            </div>
@@ -35,22 +34,22 @@ $_SESSION['fid'] = 3;
 	<?php
 	include_once("db_connect.php");
 
-	$fid = $_SESSION['fid'];
+	$fid = $_GET['fid'];
 	$qStr = "SELECT DISTINCT username FROM user WHERE uid=$fid;";
 	$qRes = $db->query($qStr);
-	
+
 	if ($qRes != FALSE) {
 		$qRow = $qRes->fetch();
 		$username = $qRow['username'];
 	}
 	?>
-	
+
 
         <div>
           <div class = "other-profile">
             <img class = "other-profile-pic" src = "https://pbs.twimg.com/profile_images/1155645244563742721/tuCu6BT-_400x400.jpg">
             <p class = "other-profile-name"> <?php echo $username; ?> </p>
-	    <input type='button' class ='follow-button' id='follow_btn' value = 'Follow' onclick='window.location.href='follow_f.php''>
+	           <input type='button' class ='follow-button' id='follow_btn' value = 'Follow' onclick='follow(<?php echo $fid; ?>)''>
           </div>
 
           <hr style = "border: 2px solid black; width: 90%">
@@ -59,13 +58,22 @@ $_SESSION['fid'] = 3;
               <center>
                 <h2> Playlists <?php echo $username; ?> listens to </h2>
               <table class = "music-table" cellspacing ="5" cellpadding="10">
-                <TR><TD>Name</TD><TD>Creator</TD></TR>
-                <TR><TD>Name</TD><TD>Creator</TD></TR>
-                <TR><TD>Name</TD><TD>Creator</TD></TR>
-                <TR><TD>Name</TD><TD>Creator</TD></TR>
-                <TR><TD>Name</TD><TD>Creator</TD></TR>
-                <TR><TD>Name</TD><TD>Creator</TD></TR>
-                <TR><TD>Name</TD><TD>Creator</TD></TR>
+                <?php
+                $qStr = "SELECT name, username FROM Playlist NATURAL JOIN followplist JOIN user on user.uid = Playlist.owner WHERE followplist.uid = $fid;";
+                $qRes = $db->query($qStr);
+
+                if($qRes != FALSE) {
+
+                  //display all rows from user
+                  print "<tr><th>Playlist</th><th>Owner</th></tr>";
+                  while($row = $qRes->fetch()) {
+                    $name = $row['name'];
+                    $uname = $row['username'];
+                    $str = "<TR><TD>$name</TD><TD>$uname</TD></TR>";
+                    print $str;
+                  }
+                }
+                ?>
               </table>
               </center>
             </div>
@@ -73,14 +81,21 @@ $_SESSION['fid'] = 3;
               <center>
                 <h2> <?php echo $username; ?> follows </h2>
               <table class = "music-table" cellspacing ="5" cellpadding="10">
-		<TR><TD><img class = "table-pro-pic"src = "https://pbs.twimg.com/profile_images/1155645244563742721/tuCu6BT-_400x400.jpg"/></TD><TD>Name</TD></TR>
-                <TR><TD><img class = "table-pro-pic"src = "https://pbs.twimg.com/profile_images/1155645244563742721/tuCu6BT-_400x400.jpg"/></TD><TD>Name</TD></TR>
-                <TR><TD><img class = "table-pro-pic"src = "https://pbs.twimg.com/profile_images/1155645244563742721/tuCu6BT-_400x400.jpg"/></TD><TD>Name</TD></TR>
-                <TR><TD><img class = "table-pro-pic"src = "https://pbs.twimg.com/profile_images/1155645244563742721/tuCu6BT-_400x400.jpg"/></TD><TD>Name</TD></TR>
-                <TR><TD><img class = "table-pro-pic"src = "https://pbs.twimg.com/profile_images/1155645244563742721/tuCu6BT-_400x400.jpg"/></TD><TD>Name</TD></TR>
-                <TR><TD><img class = "table-pro-pic"src = "https://pbs.twimg.com/profile_images/1155645244563742721/tuCu6BT-_400x400.jpg"/></TD><TD>Name</TD></TR>
-                <TR><TD><img class = "table-pro-pic"src = "https://pbs.twimg.com/profile_images/1155645244563742721/tuCu6BT-_400x400.jpg"/></TD><TD>Name</TD></TR>
-                
+                <?php
+   $query = "SELECT * FROM follow where uid=$fid;";
+   $result = $db->query($query);
+   if ($result != FALSE) {
+     while ($row = $result->fetch()) {
+       $uid = $row['fid'];
+       $pStr = "SELECT * FROM user WHERE uid=$uid;";
+       $pRes = $db->query($pStr);
+       $row = $pRes->fetch();
+       $follower = $row['username'];
+       $str = "<TR><TD><img class = 'table-pro-pic' src = 'https://pbs.twimg.com/profile_images/1155645244563742721/tuCu6BT-_400x400.jpg'/></TD><TD>$follower</TD></TR>\n";
+       print $str;
+       }
+   }
+   ?>
               </table>
               </center>
             </div>
@@ -103,7 +118,7 @@ $_SESSION['fid'] = 3;
 				}
 		}
 		?>
-      
+
               </table>
               </center>
             </div>
@@ -111,25 +126,24 @@ $_SESSION['fid'] = 3;
             <center>
               <h2> Playlists <?php echo $username; ?> has made </h2>
             <table class = "music-table" cellspacing ="5" cellpadding="10">
-              <TR><TD>Name</TD></TR>
-              <TR><TD>Name</TD></TR>
-              <TR><TD>Name</TD></TR>
-              <TR><TD>Name</TD></TR>
-              <TR><TD>Name</TD></TR>
-              <TR><TD>Name</TD></TR>
-            </table>
-            </center>
-          </div>
-          <div class = "music-container">
-            <center>
-              <h2> <?php echo $username; ?>'s most listned to songs </h2>
-            <table class = "music-table" cellspacing ="5" cellpadding="10">
-              <TR><TD>Name</TD></TR>
-              <TR><TD>Name</TD></TR>
-              <TR><TD>Name</TD></TR>
-              <TR><TD>Name</TD></TR>
-              <TR><TD>Name</TD></TR>
-              <TR><TD>Name</TD></TR>
+              <?php
+                $user = $_SESSION['uid'];
+                $query = "SELECT name
+                          FROM Playlist
+                          WHERE owner = $fid AND public = 1;";
+                $result = $db->query($query);
+
+                if($result != FALSE) {
+
+                  //display all rows from user
+                  while($row = $result->fetch()) {
+                    $name = $row['name'];
+
+                    $str = "<tr><td>$name</td></tr>";
+                    print $str;
+                  }
+                }
+              ?>
             </table>
             </center>
           </div>
@@ -143,4 +157,10 @@ $_SESSION['fid'] = 3;
             </center>
         </div>
     </body>
+    <script>
+	   function follow(other_id) {
+		     var link = "http://www.cs.gettysburg.edu/~tibech01/cs360/ensemble/follow_f.php?&id=" + other_id;
+	    	   window.location.href = link;
+	       }
+	</script>
 </html>

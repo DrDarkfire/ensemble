@@ -1,9 +1,9 @@
 <?php
-
+//Author: Mai Trinh
 //print_r($_POST);
 
 include_once("db_connect.php");
-require_once("hw4utils.php");
+include_once("hw4utils.php");
 
 $username = $_POST['username'];
 $pass = $_POST['password'];
@@ -23,9 +23,11 @@ else if ($check == -2) {
 	print("<P>Check your email to verify your account</P>");
 }
 else {
-	print("<P>Successfully logged in</P>");
+	$qStr = "SELECT uid FROM user WHERE username = '$username';";
+	$qRes = $db->query($qStr);
+	$row = $qRes->fetch();
+	$uid = $row['uid'];
+	header("Location: http://www.cs.gettysburg.edu/~tibech01/cs360/ensemble/user.php?&uid=$uid");
 }
 
 ?>
-
-
